@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tentang - Kelas X TKJ</title>
+    <style>
+        /* General Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-color: #000000;
+            --text-color: #f3f4f6;
+            --card-bg: rgba(20, 20, 20, 0.8);
+            --border-color: rgba(255, 255, 255, 0.15);
+            --accent-color: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            padding: 40px 0;
+        }
+
+        /* Background Animating Border (Bingkai Garis Berputar) */
+        .border-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            border: 3px solid transparent;
+            box-sizing: border-box;
+            background-image: linear-gradient(var(--bg-color), var(--bg-color)), linear-gradient(90deg, transparent 50%, var(--accent-color) 100%);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+            animation: rotateBorder 8s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotateBorder {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Background Glow */
+        .bg-glow {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at center, rgba(30, 30, 30, 0.5) 0%, rgba(0, 0, 0, 0.95) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Pop-up Overlay (Sekali klik langsung close & putar audio) */
+        #audio-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            cursor: pointer;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .popup-box {
+            background: rgba(25, 25, 25, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 35px 50px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            animation: pulse-box 2s infinite ease-in-out;
+            max-width: 90%;
+        }
+
+        .popup-box h2 {
+            font-size: 1.6rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .popup-box p {
+            font-size: 1rem;
+            color: #9ca3af;
+        }
+
+        @keyframes pulse-box {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3); }
+            50% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+        }
+
+        .fade-out {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            width: 90%;
+            margin: 0 auto;
+            text-align: center;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Page Title */
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: -1px;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: #9ca3af;
+            margin-bottom: 40px;
+        }
+
+        /* Content Card */
+        .info-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .info-card h2 {
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+            margin-top: 25px;
+        }
+
+        .info-card h2:first-child {
+            margin-top: 0;
+        }
+
+        .info-card p {
+            font-size: 1.05rem;
+            color: #d1d5db;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        /* Moto Box */
+        .moto-box {
+            background: rgba(255, 255, 255, 0.04);
+            border-left: 5px solid #ffffff;
+            padding: 25px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 35px;
+            position: relative;
+        }
+
+        .moto-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #9ca3af;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .moto-text {
+            font-size: 1.35rem;
+            font-style: italic;
+            color: #ffffff;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Pop-up Interaktif untuk mengaktifkan audio -->
+    <div id="audio-overlay">
+        <div class="popup-box">
+            <h2>⚡ Klik di Sini untuk Masuk</h2>
+            <p>Klik sekali untuk membuka halaman & mengaktifkan audio latar belakang</p>
+        </div>
+    </div>
+
+    <!-- Rotating Border Animation Background -->
+    <div class="border-animation"></div>
+    
+    <!-- Background gradient -->
+    <div class="bg-glow"></div>
+
+    <div class="container">
+        <!-- Judul tentang web ini -->
+        <h1 class="page-title">Tentang Web Ini</h1>
+        <p class="page-subtitle">Pusat Informasi & Dokumentasi Resmi Kelas X TKJ</p>
+
+        <!-- Kartu Konten Utama -->
+        <div class="info-card">
+            <h2>🌐 Kenapa Web Ini Dibuat?</h2>
+            <p>
+                Website ini dibangun sebagai wadah digital dan identitas online bagi kelas <strong>X TKJ (Teknik Komputer dan Jaringan)</strong>. Di sini, kami mendokumentasikan kebersamaan, struktur kelas, progres project, serta berbagai keseruan aktivitas belajar merakit jaringan dan teknologi di sekolah.
+            </p>
+            
+            <h2>💡 Filosofi & Prinsip</h2>
+            <p>
+                Sebagai anak TKJ, kami terbiasa menghadapi kabel LAN yang semrawut, konfigurasi router yang rumit, hingga error kode yang bikin pusing. Namun, semua itu mengajarkan kami satu hal: selalu ada solusi bagi setiap masalah jika dikerjakan dengan kerja sama tim yang solid.
+            </p>
+
+            <!-- Moto Kelas -->
+            <div class="moto-box">
+                <div class="moto-label">Moto Kebanggaan Kelas</div>
+                <div class="moto-text">"Selama di bawah matahari, tidak ada yang tidak mungkin."</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio latar belakang -->
+    <audio id="bg-audio" loop>
+        <source src="https://actions.google.com/sounds/v1/ambiences/rain_heavy.ogg" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        const overlay = document.getElementById('audio-overlay');
+        const audio = document.getElementById('bg-audio');
+
+        // Cukup sekali klik di mana saja pada overlay, pop-up langsung hilang dan audio menyala
+        overlay.addEventListener('click', function() {
+            audio.play().then(() => {
+                console.log("Audio berhasil diputar.");
+            }).catch(err => {
+                console.log("Gagal memutar audio:", err);
+            });
+
+            // Sembunyikan pop-up dengan animasi mulus
+            overlay.classList.add('fade-out');
+        });
+    </script>
+</body>
+</html>
