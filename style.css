@@ -1,0 +1,277 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    background-color: #000000;
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+/* Canvas Reptil Transparan */
+#reptile-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Konten Utama di Atas Canvas */
+nav, .header-container, .main-menu-container, .music-btn {
+    position: relative;
+    z-index: 10;
+}
+
+/* Navigasi */
+nav {
+    width: 100%;
+    background-color: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(5px);
+    border-bottom: 1px solid #222;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    gap: 20px;
+}
+
+nav a {
+    color: #aaaaaa;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: #ffffff;
+    background-color: #1a1a1a;
+}
+
+/* Header & Judul */
+.header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 25px;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+.logo-frame {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.logo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.animated-title-box {
+    position: relative;
+    padding: 12px 30px;
+    background: #050505;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.animated-title-box::before {
+    content: '';
+    position: absolute;
+    width: 150%;
+    height: 500%;
+    background: conic-gradient(transparent, transparent, transparent, #ffffff);
+    animation: rotate 4s linear infinite;
+}
+
+.animated-title-box::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: #000000;
+    border-radius: 5px;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.animated-title-box h1 {
+    position: relative;
+    z-index: 10;
+    color: #ffffff;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+}
+
+/* Statistik Angka */
+.stats-box {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+    padding: 10px 20px;
+    width: 90%;
+    max-width: 320px;
+    margin: 20px auto 10px auto;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-item .num {
+    font-size: 1.6rem;
+    font-weight: 800;
+}
+
+.num-cowo { color: #00d2ff; text-shadow: 0 0 10px rgba(0, 210, 255, 0.5); }
+.num-total { color: #ffffff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+.num-cewe { color: #ff4da6; text-shadow: 0 0 10px rgba(255, 77, 166, 0.5); }
+
+.stat-item .label {
+    font-size: 0.75rem;
+    color: #aaaaaa;
+}
+
+/* Menu Kartu */
+.main-menu-container {
+    display: flex;
+    gap: 15px;
+    width: 90%;
+    max-width: 380px;
+    margin: 15px auto;
+}
+
+.card-large {
+    flex: 1;
+    height: 175px;
+    background: rgba(20, 20, 20, 0.85);
+    border: 1px solid #333;
+    border-radius: 16px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none;
+    color: #fff;
+    position: relative;
+    backdrop-filter: blur(5px);
+    transition: 0.3s;
+}
+
+.card-large .card-icon-top { font-size: 2.2rem; }
+.card-large h3 { font-size: 1rem; }
+.card-large p { font-size: 0.75rem; color: #888; }
+
+.right-cards-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.card-small {
+    height: 80px;
+    background: rgba(20, 20, 20, 0.85);
+    border: 1px solid #333;
+    border-radius: 16px;
+    padding: 12px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #fff;
+    position: relative;
+    backdrop-filter: blur(5px);
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.arrow-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.card-small .arrow-icon {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.card-large:hover, .card-small:hover {
+    border-color: #fff;
+    transform: translateY(-3px);
+}
+
+/* Tombol Musik Bulat di Pojok Kanan Bawah */
+.music-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 50px;
+    height: 50px;
+    background: rgba(30, 30, 30, 0.85);
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+/* Animasi Berputar Saat Lagu Berjalan */
+.music-btn.playing {
+    animation: spin 3s linear infinite;
+    border-color: #00d2ff;
+    color: #00d2ff;
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

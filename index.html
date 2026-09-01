@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Kelas X TKJ</title>
+    <!-- CSS Utama -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Canvas Latar Belakang -->
+    <canvas id="reptile-canvas"></canvas>
+
+    <!-- Menu Navigasi -->
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#struktur">Struktur Kelas</a></li>
+            <li><a href="#tentang">Tentang</a></li>
+            <li><a href="#dev">Coming Soon</a></li>
+        </ul>
+    </nav>
+
+    <!-- Header & Judul Utama -->
+    <div class="header-container" id="home">
+        
+        <!-- Bingkai Bulat Foto Logo -->
+        <div class="logo-frame">
+            <img src="https://via.placeholder.com/150/000000/FFFFFF?text=LOGO+TKJ" alt="Logo Kelas X TKJ">
+        </div>
+
+        <!-- Bingkai Judul dengan Animasi Putih -->
+        <div class="animated-title-box">
+            <h1>KELAS X TKJ</h1>
+        </div>
+
+        <!-- Section Statistik Angka Siswa -->
+        <div class="stats-box">
+            <div class="stat-item">
+                <span class="num num-cowo">14</span>
+                <span class="label">Cowo</span>
+            </div>
+            <div class="stat-item">
+                <span class="num num-total">17</span>
+                <span class="label">Total</span>
+            </div>
+            <div class="stat-item">
+                <span class="num num-cewe">3</span>
+                <span class="label">Cewe</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Layout Grid Kartu Menu Utama -->
+    <div class="main-menu-container">
+        
+        <!-- Kartu Besar Kiri (Instagram) -->
+        <a href="https://instagram.com" target="_blank" class="card-large">
+            <i class="fa-brands fa-instagram card-icon-top"></i>
+            <i class="fa-solid fa-chevron-right arrow-icon"></i>
+            <div class="card-bottom-text">
+                <h3>Instagram Kelas</h3>
+                <p>Lihat Selengkapnya</p>
+            </div>
+        </a>
+
+        <!-- Kolom Kanan (2 Kartu) -->
+        <div class="right-cards-column">
+            
+            <!-- Kartu Situs Web Lama -->
+            <a href="#" class="card-small">
+                <i class="fa-solid fa-link card-icon-left"></i>
+                <span>Situs Web Lama</span>
+                <i class="fa-solid fa-chevron-right arrow-icon"></i>
+            </a>
+
+            <!-- Kartu Teks Anonim -->
+            <a href="#" class="card-small">
+                <i class="fa-solid fa-paper-plane card-icon-left"></i>
+                <span>Teks Anonim</span>
+                <i class="fa-solid fa-chevron-right arrow-icon"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Tombol Bulat Kontrol Musik di Pojok Kanan Bawah -->
+    <div id="music-control" class="music-btn">
+        <i id="music-icon" class="fa-solid fa-music"></i>
+    </div>
+
+    <!-- Tag Audio untuk Lagu -->
+    <audio id="bg-music" loop>
+        <source src="lagu.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
