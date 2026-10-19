@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexa Reset Fix</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0a0a0f;color:#e6e6e6;font-family:system-ui;display:flex;flex-direction:column;height:100vh}
+header{padding:12px;background:#12121a;border-bottom:1px solid #222;display:flex;justify-content:space-between}
+#brain{padding:8px;background:#111;border-bottom:1px solid #222;display:flex;gap:6px}
+#brain input{flex:1;padding:10px;border-radius:20px;border:1px solid #333;background:#1e1e2e;color:white;font-size:12px}
+#chat{flex:1;padding:16px;overflow:auto;display:flex;flex-direction:column;gap:12px}
+.bubble{padding:12px 16px;border-radius:18px;max-width:85%;white-space:pre-wrap}
+.me{align-self:flex-end;background:#6c5cff}.bot{align-self:flex-start;background:#1e1e2e}
+.bar{display:flex;padding:10px;background:#12121a;border-top:1px solid #222;gap:8px}
+#input{flex:1;padding:14px 18px;border-radius:25px;border:none;background:#1e1e2e;color:white;outline:none}
+#send{width:44px;height:44px;border-radius:50%;border:none;background:#00ff88;color:#000;font-weight:800}
+</style>
+</head>
+<body>
+<header><b>Nexa Ai⚡</b><button onclick="newChat()" style="background:#222;border:1px solid #333;color:white;padding:6px 12px;border-radius:20px">+ New</button></header>
+<div id="brain">
+<input id="persona" value="Kamu Nexa, temen santai, kalau dibilang nice jawab 'yoi thanks bro'">
+<button onclick="savePersona()" style="padding:10px;border-radius:20px;background:#6c5cff;color:white;border:none">Simpan Otak</button>
+</div>
+<div id="chat"></div>
+<div class="bar"><input id="input" placeholder="Chat..."><button id="send">➤</button></div>
+<script>
+const API_KEY = "AQ.Ab8RN6JokmNG6oQaGZMZXptd774wvZNrQnOZEqK_USEsnAq8ag";
+const MODEL = "gemini-flash-lite-latest";
+const chatEl=document.getElementById('chat'), input=document.getElementById('input'), send=document.getElementById('send'), personaEl=document.getElementById('persona');
+let history = []; // AUTO RESET, GAK PAKE LOCALSTORAGE
+let persona = personaEl.value;
+function savePersona(){ persona=personaEl.value; add("✅ Otak kesimpen!","bot"); }
+function newChat(){ history=[]; chatEl.innerHTML=""; add("Chat kereset! Yo, coba 'nice'","bot"); }
+function add(t,r){ let d=document.createElement('div'); d.className='bubble '+r; d.innerText=t; chatEl.appendChild(d); chatEl.scrollTop=9999; return d; }
+add("Yo! Sekarang auto reset pas keluar masuk. Coba chat.","bot");
+async function kirim(){
+  let teks=input.value.trim(); if(!teks) return;
+  add(teks,'me'); history.push({role:'me', text:teks});
+  input.value=""; send.disabled=true; let load=add("...","bot");
+  try{
+    let mem = history.map(h=> (h.role==='me'?'User':'Kamu')+": "+h.text).join("\n");
+    let prompt = `PERSONALITY: ${persona}\nMEMORY:\n${mem}\nUser: ${teks}`;
+    let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":API_KEY.trim()},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+    let data=await res.json(); load.remove();
+    if(data.error){ add("❌ "+data.error.message,"bot"); } else { let j=data.candidates[0].content.parts[0].text; add(j,'bot'); history.push({role:'bot', text:j}); }
+  }catch(e){ load.remove(); add("Error: "+e.message,"bot"); }
+  send.disabled=false;
+}
+send.onclick=kirim; input.onkeydown=e=>{ if(e.key=='Enter') kirim(); };
+</script>
+</body>
+</html>
