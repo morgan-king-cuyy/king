@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexa AI Pro</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0a0a0f;color:#e6e6e6;font-family:system-ui,-apple-system;display:flex;flex-direction:column;height:100vh}
+header{padding:12px 16px;background:#12121a;border-bottom:1px solid #222;display:flex;justify-content:space-between;align-items:center}
+header b{font-size:18px} header small{color:#0f0}
+#chat{flex:1;padding:16px;overflow:auto;display:flex;flex-direction:column;gap:14px;background: radial-gradient(600px at top, #15152a 0%, #0a0a0f 60%)}
+.bubble{padding:12px 16px;border-radius:18px;max-width:88%;line-height:1.6;white-space:pre-wrap;word-break:break-word;font-size:15px}
+.me{align-self:flex-end;background:linear-gradient(135deg,#6c5cff,#4a3aff);box-shadow:0 4px 12px #6c5cff40}
+.bot{align-self:flex-start;background:#1c1c2a;border:1px solid #2a2a3a}
+.bubble img{max-width:100%;border-radius:12px;margin-top:8px;display:block}
+.bar{display:flex;padding:10px;background:#12121a;border-top:1px solid #222;gap:8px;align-items:center}
+#input{flex:1;padding:14px 18px;border-radius:25px;border:none;outline:none;background:#1e1e2e;color:white;font-size:16px}
+.iconbtn{width:44px;height:44px;border-radius:50%;border:none;background:#1e1e2e;color:white;font-size:18px;display:flex;align-items:center;justify-content:center}
+#send{width:44px;height:44px;border-radius:50%;border:none;background:#6c5cff;color:white;font-weight:800;font-size:18px}
+#keybox{padding:10px;background:#000;border-bottom:1px solid #222;display:flex;gap:8px}
+#key{flex:1;padding:10px 14px;border-radius:20px;border:1px solid #333;background:#111;color:#0f0;font-size:13px}
+#preview{padding:8px 12px;display:none;gap:8px;align-items:center;background:#1a1a25;border-top:1px solid #222}
+#preview img{height:50px;border-radius:8px}
+</style>
+</head>
+<body>
+<header>
+<div><b>Nexa AI Pro</b> <small>● 3.8-flash</small></div>
+<div style="display:flex;gap:8px">
+<button onclick="newChat()" style="background:#222;border:1px solid #333;color:#fff;padding:6px 12px;border-radius:20px;font-size:12px">+ New</button>
+<button onclick="clearAll()" style="background:transparent;border:none;color:#666;font-size:12px">Hapus</button>
+</div>
+</header>
+
+<div id="keybox">
+<input id="key" type="password" placeholder="Paste API Key sekali...">
+<button onclick="saveKey()" style="padding:10px 14px;border-radius:20px;border:none;background:#00cc88;color:white;font-weight:bold">Simpan</button>
+</div>
+
+<div id="chat"></div>
+
+<div id="preview">
+<img id="prevImg"><span id="prevName" style="font-size:12px;color:#aaa"></span>
+<button onclick="removeImg()" style="margin-left:auto;background:#ff4444;border:none;color:white;border-radius:50%;width:24px;height:24px">x</button>
+</div>
+
+<div class="bar">
+<button class="iconbtn" onclick="document.getElementById('file').click()">📷</button>
+<input type="file" id="file" accept="image/*" hidden>
+<input id="input" placeholder="Tanya apa aja, atau kirim gambar...">
+<button id="send">➤</button>
+</div>
+
+<script>
+const MODEL="gemini-3.8-flash";
+const chatEl=document.getElementById('chat'), input=document.getElementById('input'), send=document.getElementById('send'), keyEl=document.getElementById('key'), keybox=document.getElementById('keybox');
+const fileEl=document.getElementById('file'), preview=document.getElementById('preview'), prevImg=document.getElementById('prevImg'), prevName=document.getElementById('prevName');
+
+let history = JSON.parse(localStorage.getItem("nexa_history") || "[]");
+let attachedImage = null;
+
+// LOAD KEY
+let savedKey = localStorage.getItem("nexa_key");
+if(savedKey){ keyEl.value=savedKey; keybox.style.display='none'; }
+renderHistory();
+
+function saveKey(){
+  let k=keyEl.value.trim();
+  if(k.length<20){ alert("Key salah"); return; }
+  localStorage.setItem("nexa_key",k);
+  keybox.style.display='none';
+  add("✅ Key disimpan! Sekarang bisa chat + kirim gambar.","bot");
+}
+function clearAll(){
+  if(confirm("Hapus semua history chat?")){
+    history=[]; localStorage.removeItem("nexa_history"); chatEl.innerHTML=""; add("History dihapus. Mulai chat baru.","bot");
+  }
+}
+function newChat(){
+  history=[]; localStorage.removeItem("nexa_history"); chatEl.innerHTML=""; add("Chat baru dimulai. Mau tanya apa?","bot");
+}
+
+function saveHistory(){ localStorage.setItem("nexa_history", JSON.stringify(history)); }
+
+function add(text, role, imgSrc=null){
+  let d=document.createElement('div');
+  d.className='bubble '+role;
+  d.innerText=text;
+  if(imgSrc){ let im=document.createElement('img'); im.src=imgSrc; d.appendChild(im); }
+  chatEl.appendChild(d);
+  chatEl.scrollTop=chatEl.scrollHeight;
+  return d;
+}
+
+function renderHistory(){
+  chatEl.innerHTML="";
+  if(history.length==0){ add("Halo! Aku Nexa Pro 🚀\n\n• Bisa baca gambar\n• History kesimpen otomatis\n• Key cuma sekali paste\n\nCoba kirim foto struk, PR, atau tanya apa aja.","bot"); return; }
+  history.forEach(h=> add(h.text, h.role, h.img||null));
+}
+
+// IMAGE HANDLING
+fileEl.onchange = ()=>{
+  let file=fileEl.files[0];
+  if(!file) return;
+  let reader=new FileReader();
+  reader.onload = e=>{
+    attachedImage = { data: e.target.result.split(",")[1], mime: file.type, preview: e.target.result };
+    prevImg.src=attachedImage.preview;
+    prevName.innerText=file.name;
+    preview.style.display='flex';
+  };
+  reader.readAsDataURL(file);
+};
+function removeImg(){ attachedImage=null; preview.style.display='none'; fileEl.value=""; }
+
+async function kirim(){
+  let teks=input.value.trim();
+  let key=keyEl.value.trim() || localStorage.getItem("nexa_key") || "";
+  if(!teks && !attachedImage) return;
+  if(!key){ keybox.style.display='flex'; add("❌ Paste API Key dulu di atas","bot"); return; }
+
+  let displayText = teks || "Tolong jelaskan gambar ini";
+  let imgPreview = attachedImage ? attachedImage.preview : null;
+  
+  add(displayText,'me', imgPreview);
+  history.push({role:'me', text:displayText, img:imgPreview});
+  saveHistory();
+
+  input.value=""; let currentImg=attachedImage; removeImg();
+  send.disabled=true;
+  let load=add("Nexa lagi mikir...","bot");
+
+  try{
+    let parts=[];
+    if(teks) parts.push({text: teks});
+    if(currentImg) parts.push({inline_data: {mime_type: currentImg.mime, data: currentImg.data}});
+    if(parts.length==0) parts=[{text:"Jelaskan gambar ini"}];
+
+    let url=`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${key}`;
+    let res=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts: parts}]})});
+    let data=await res.json();
+    load.remove();
+    if(data.error){ add("❌ Error: "+data.error.message,"bot"); }
+    else{
+      let jawaban=data.candidates[0].content.parts[0].text;
+      add(jawaban,'bot');
+      history.push({role:'bot', text:jawaban});
+      saveHistory();
+    }
+  }catch(e){ load.remove(); add("Error: "+e.message,"bot"); }
+  send.disabled=false;
+  chatEl.scrollTop=chatEl.scrollHeight;
+}
+
+send.onclick=kirim;
+input.onkeydown=(e)=>{ if(e.key=='Enter') kirim(); };
+</script>
+</body>
+</html>
